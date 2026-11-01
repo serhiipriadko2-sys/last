@@ -7,8 +7,6 @@
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
 #include "Dom/JsonObject.h"
-#include "Misc/CommandLine.h"
-#include "Misc/Parse.h"
 
 namespace LL
 {
@@ -39,8 +37,6 @@ namespace LL
  { FString Value;return O.IsValid() && O->TryGetStringField(Key,Value)?Value:Default; }
  static int32 Int(const TSharedPtr<FJsonObject>& O,const TCHAR* Key,int32 Default=0)
  { double V=0;return O.IsValid()&&O->TryGetNumberField(Key,V)?FMath::RoundToInt(V):Default; }
- static float Num(const TSharedPtr<FJsonObject>& O,const TCHAR* Key,float Default)
- { double V=0;return O.IsValid()&&O->TryGetNumberField(Key,V)&&FMath::IsFinite(V)?float(V):Default; }
  static TArray<FString> Strings(const TSharedPtr<FJsonObject>& O,const TCHAR* Key)
  {
   TArray<FString> Output;
@@ -67,41 +63,13 @@ void ULLGameInstance::Init()
 bool ULLGameInstance::LoadDatabase()
 {
  AllSkills.Empty();Mobs.Empty();Bosses.Empty();Items.Empty();Equipped.Empty();
- bool ok=LoadBalance() && LoadSkillArray(TEXT("skills.json"))
+ bool ok=LoadSkillArray(TEXT("skills.json"))
   && LoadEnemyArray(TEXT("mobs.json"),false)
   && LoadEnemyArray(TEXT("minibosses.json"),true)
   && LoadGear(TEXT("starter_gear.json"));
  UE_LOG(LogTemp,Display,TEXT("LL_DATABASE: skills=%d enemies=%d minibosses=%d loaded=%s"),
   AllSkills.Num(),Mobs.Num(),Bosses.Num(),ok?TEXT("YES"):TEXT("NO"));
  return ok&&AllSkills.Num()>=100&&Mobs.Num()>=30&&Bosses.Num()==9;
-}
-
-bool ULLGameInstance::LoadBalance()
-{
- const auto O=LL::JsonFile(TEXT("balance.json"));
- if(!O.IsValid())return false;
- Balance.Loadout=FMath::Clamp(LL::Int(O,TEXT("loadout_size"),50),2,100);
- Balance.XPBase=FMath::Clamp(LL::Num(O,TEXT("xp_base"),120.f),1.f,10000.f);
- Balance.XPK=FMath::Clamp(LL::Num(O,TEXT("xp_k"),.96f),.5f,.999f);
- Balance.XPReward=FMath::Clamp(LL::Num(O,TEXT("xp_per_enemy"),120.f),1.f,10000.f);
- Balance.MaxLosses=FMath::Clamp(LL::Int(O,TEXT("max_losses_per_encounter"),12),1,100);
- Balance.DemoLosses=FMath::Clamp(LL::Int(O,TEXT("demo_losses_per_win"),5),1,100);
- Balance.HPStart=FMath::Clamp(LL::Int(O,TEXT("hero_hp_level100"),120),20,1000);
- Balance.HPEnd=FMath::Clamp(LL::Int(O,TEXT("hero_hp_level0"),70),20,1000);
- Balance.BasicDamage=FMath::Clamp(LL::Int(O,TEXT("basic_damage"),8),1,100);
- Balance.Difficulty=FMath::Clamp(LL::Num(O,TEXT("difficulty_level0"),1.6f),1.f,3.f);
- Balance.MaxInventory=FMath::Clamp(LL::Int(O,TEXT("max_inventory"),64),3,128);
- Balance.MaxDepth=FMath::Clamp(LL::Int(O,TEXT("max_fusion_depth"),4),1,8);
- Balance.ParryStart=FMath::Clamp(LL::Num(O,TEXT("parry_window_level100"),.27f),.10f,.8f);
- Balance.ParryEnd=FMath::Clamp(LL::Num(O,TEXT("parry_window_level0"),.17f),.10f,.8f);
- Balance.DodgeStart=FMath::Clamp(LL::Num(O,TEXT("dodge_window_level100"),.38f),.15f,1.f);
- Balance.DodgeEnd=FMath::Clamp(LL::Num(O,TEXT("dodge_window_level0"),.26f),.15f,1.f);
- Balance.ForgeBase=FMath::Clamp(LL::Num(O,TEXT("forge_break_base"),.10f),0.f,.8f);
- Balance.ForgeStep=FMath::Clamp(LL::Num(O,TEXT("forge_break_step"),.12f),0.f,.2f);
- Balance.VictoryHeal=FMath::Clamp(LL::Num(O,TEXT("victory_heal_fraction"),.25f),0.f,1.f);
- O->TryGetBoolField(TEXT("demo_default"),Balance.bDemo);
- bDemo=Balance.bDemo;
- return true;
 }
 
 bool ULLGameInstance::LoadSkillArray(const FString& File)
@@ -175,7 +143,7 @@ TArray<FLLSkill> ULLGameInstance::GetSkills() const
  TArray<FLLSkill> Result;
  FLLSkill Basic;Basic.Id=TEXT("basic_strike");Basic.Name=TEXT("Traveler's Strike");
  Basic.Display=TEXT("Обычный удар");Basic.Kind=TEXT("strike");Basic.Element=TEXT("physical");
- Basic.Power=Balance.BasicDamage;Result.Add(Basic);
+ Basic.Power=8;Result.Add(Basic);
  FLLSkill Guard;Guard.Id=TEXT("basic_guard");Guard.Name=TEXT("Last Stand");
  Guard.Display=TEXT("Защита");Guard.Kind=TEXT("guard");Guard.Element=TEXT("physical");
  Guard.Power=0;Result.Add(Guard);
@@ -193,7 +161,6 @@ TArray<FLLSkill> ULLGameInstance::GetSkills() const
    {
     FLLSkill Skill=*Original;
     Skill.Id=Item->Id+TEXT("_")+Original->Id;
-    Skill.Power=FMath::RoundToInt(Skill.Power*(1.f+.12f*(Item->Grade-1)));
     Result.Add(MoveTemp(Skill));
    }
   }
@@ -207,7 +174,7 @@ void ULLGameInstance::RandomizeStartingBuild()
  for(const FLLSkill& Skill:AllSkills)Pool.Add(Skill.Id);
  for(int32 I=Pool.Num()-1;I>0;--I)Pool.Swap(I,Random.RandRange(0,I));
  ChosenStart=Pool;
- ChosenStart.SetNum(FMath::Min(Balance.Loadout,Pool.Num()));
+ ChosenStart.SetNum(FMath::Min(50,Pool.Num()));
 }
 
 bool ULLGameInstance::ToggleStartSkill(int32 Index)
@@ -215,14 +182,14 @@ bool ULLGameInstance::ToggleStartSkill(int32 Index)
  if(!AllSkills.IsValidIndex(Index))return false;
  const FString& Id=AllSkills[Index].Id;
  if(ChosenStart.Contains(Id))ChosenStart.Remove(Id);
- else if(ChosenStart.Num()<Balance.Loadout)ChosenStart.Add(Id);
+ else if(ChosenStart.Num()<50)ChosenStart.Add(Id);
  else {SetNotice(TEXT("Only 50 starting skills. Remove one before adding another."));return false;}
  return true;
 }
 
 bool ULLGameInstance::StartRun(UWorld* World)
 {
- if(!World||ChosenStart.Num()!=Balance.Loadout)return false;
+ if(!World||ChosenStart.Num()!=50)return false;
  // Reset equipment and loot from a previous run before copying the new starting build.
  Items.Empty();Equipped.Empty();
  if(!LoadGear(TEXT("starter_gear.json")))return false;
@@ -232,12 +199,10 @@ bool ULLGameInstance::StartRun(UWorld* World)
   const FLLSkill* Skill=FindSkill(Id);
   if(Skill){Innate.Add(*Skill);Snapshot.Add(*Skill);}
  }
- if(Innate.Num()!=Balance.Loadout)return false;
- SnapshotGear=Items;
- OpenedChests.Empty();DiscoveredShrines={0};Flasks=3;bWon=false;
- Level=100;HeroHP=MaxHP();Kills=0;XP=0;EvolutionSlots=0;BossesWon=0;
+ if(Innate.Num()!=50)return false;
+ Level=100;HeroHP=120;Kills=0;XP=0;EvolutionSlots=0;BossesWon=0;
  LossesCompleted=0;PendingLoss=0;CurrentBiome=0;SkillPage=0;
- SavedWorldLocation=FVector(160,0,165);bHasStarted=true;bInBattle=false;
+ SavedWorldLocation=FVector(160,0,165);bHasStarted=true;bInBattle=false;bDemo=true;
  SetNotice(TEXT("100 -> 0. Every victory gives loot but accelerates the descent."));
  Phase=ELLPhase::Exploration;
  UGameplayStatics::OpenLevel(World,FName(TEXT("/Game/Maps/Explore")));
@@ -246,11 +211,11 @@ bool ULLGameInstance::StartRun(UWorld* World)
 
 int32 ULLGameInstance::MaxHP() const
 {
- return FMath::RoundToInt(FMath::Lerp(float(Balance.HPEnd),float(Balance.HPStart),Level/100.f));
+ return FMath::RoundToInt(FMath::Lerp(70.0,120.0,Level/100.0));
 }
 float ULLGameInstance::XPToLose(int32 CurrentLevel) const
 {
- return Balance.XPBase*FMath::Pow(Balance.XPK,100-FMath::Clamp(CurrentLevel,0,100));
+ return 300.0f*FMath::Pow(.96f,100-FMath::Clamp(CurrentLevel,0,100));
 }
 void ULLGameInstance::PushLog(const FString& Text)
 {
@@ -290,7 +255,7 @@ bool ULLGameInstance::IsMinibossUnlocked(int32 Index) const
 void ULLGameInstance::Engage(UWorld* World,int32 EnemyIndex,bool bIsBoss,
  bool bIsElite,bool bIsFinal,const FVector& From)
 {
- if(!World||bInBattle||!bHasStarted||Phase!=ELLPhase::Exploration)return;
+ if(!World||bInBattle||!bHasStarted)return;
  if(bIsFinal && Level!=0){SetNotice(TEXT("The mirror only opens at level zero."));return;}
  if(bIsBoss && !IsMinibossUnlocked(EnemyIndex)){SetNotice(TEXT("Boss locked until a lower level."));return;}
  if(!bIsFinal && !(bIsBoss?Bosses:Mobs).IsValidIndex(EnemyIndex))return;
@@ -298,16 +263,6 @@ void ULLGameInstance::Engage(UWorld* World,int32 EnemyIndex,bool bIsBoss,
  bFinal=bIsFinal;bElite=bIsElite;bInBattle=true;
  CurrentEnemyIndex=EnemyIndex;
  ActiveEnemy=bFinal?FLLEnemy():(bIsBoss?Bosses[EnemyIndex]:Mobs[EnemyIndex]);
- bSymbiote=!bFinal&&!bIsBoss&&EnemyIndex%6==5;
- bElite=bIsElite||(!bFinal&&!bIsBoss&&EnemyIndex%6==4);
- if(bSymbiote)
- {
-  const FLLEnemy& Other=Mobs[(EnemyIndex+1)%Mobs.Num()];
-  ActiveEnemy.Name+=TEXT(" + ")+Other.Name;
-  ActiveEnemy.Attacks.Append(Other.Attacks);
-  ActiveEnemy.HP=FMath::RoundToInt(ActiveEnemy.HP*1.25f);
-  ActiveEnemy.Damage=FMath::RoundToInt((ActiveEnemy.Damage+Other.Damage)*.55f);
- }
  if(bFinal)
  {
   ActiveEnemy.Id=TEXT("MIRROR");ActiveEnemy.Name=TEXT("The Former Self");
@@ -322,16 +277,17 @@ void ULLGameInstance::Engage(UWorld* World,int32 EnemyIndex,bool bIsBoss,
 
 void ULLGameInstance::StartBattle()
 {
- Phase=ELLPhase::BattlePlayer;AP=2;Focus=0;Turn=1;MirrorPhase=1;
+ Phase=ELLPhase::BattlePlayer;AP=2;Focus=0;Turn=1;
  bGuarded=false;Timing=0;EnemyStatus.Empty();HeroStatus.Empty();
  EnemyStatusTurns=0;HeroStatusTurns=0;AttackIndex=0;AttacksRemaining=0;
  const float Progress=1.0f-Level/100.0f;
  int32 Hp=FMath::RoundToInt(ActiveEnemy.HP*(1.0f+Progress*.4f));
- EnemyDamage=FMath::RoundToInt(ActiveEnemy.Damage*FMath::Lerp(1.0f,Balance.Difficulty,Progress));
+ EnemyDamage=FMath::RoundToInt(ActiveEnemy.Damage*FMath::Lerp(1.0f,1.6f,Progress));
  if(bElite){Hp=FMath::RoundToInt(Hp*1.6f);EnemyDamage=FMath::RoundToInt(EnemyDamage*1.3f);}
  if(bFinal)
  {
-  const float Mean=SnapshotPower();
+  int32 TotalPower=0;for(const FLLSkill& S:Snapshot)TotalPower+=S.Power;
+  float Mean=Snapshot.IsEmpty()?12.0f:float(TotalPower)/Snapshot.Num();
   Hp=FMath::RoundToInt(120+Mean*5);
   EnemyDamage=FMath::RoundToInt(7+Mean*.8f);
  }
@@ -371,7 +327,6 @@ void ULLGameInstance::UseSkill(int32 ListIndex)
 void ULLGameInstance::BeginAttack(const FLLSkill& Skill)
 {
  if(Phase!=ELLPhase::BattlePlayer||AP<=0)return;
- if(Skill.Cost>AP){SetNotice(TEXT("Недостаточно очков действий. Выбери навык за 1 ОД."));return;}
  PendingAttack=Skill;Phase=ELLPhase::AttackTiming;Timing=0;bPerfectAttack=false;
  SetNotice(TEXT("SPACE on golden marker 67% for bonus; ENTER for normal attack"));
 }
@@ -386,7 +341,6 @@ void ULLGameInstance::CompleteAttack(bool bPerfect)
 void ULLGameInstance::ApplySkill(const FLLSkill& Skill,float TimingBonus)
 {
  if(Phase!=ELLPhase::BattlePlayer || AP<=0 || EnemyHP<=0)return;
- if(Skill.Cost>AP)return;
  if(Skill.Kind==TEXT("heal"))
  {
   const int32 Amount=FMath::Min(MaxHP()-HeroHP,Skill.Power+5);
@@ -407,8 +361,7 @@ void ULLGameInstance::ApplySkill(const FLLSkill& Skill,float TimingBonus)
   if(Skill.Kind==TEXT("curse")||Skill.Kind==TEXT("dash")||Chance<.20f)
   {EnemyStatus=Skill.Status;EnemyStatusTurns=2;}
  }
- Cue(Skill.Kind==TEXT("heal")?TEXT("heal"):TEXT("strike"),Skill.Element);
- AP-=FMath::Clamp(Skill.Cost,1,2);
+ --AP;
  if(EnemyHP<=0){Win(GetWorld());return;}
  if(AP<=0)EndPlayerTurn();
 }
@@ -417,12 +370,7 @@ void ULLGameInstance::EndPlayerTurn()
 {
  if(Phase!=ELLPhase::BattlePlayer)return;
  AttacksRemaining=(Level<12?3:(Level<45?2:1));
- if(ActiveEnemy.bBoss||bSymbiote)AttacksRemaining=FMath::Min(3,AttacksRemaining+1);
- if(bFinal)
- {
-  MirrorPhase=EnemyHP<EnemyMaxHP*.33f?3:(EnemyHP<EnemyMaxHP*.66f?2:1);
-  AttacksRemaining=MirrorPhase==3?3:2;
- }
+ if(bFinal)AttacksRemaining=EnemyHP<float(EnemyMaxHP)*.33f?3:2;
  if(EnemyStatus==TEXT("freeze"))AttacksRemaining=FMath::Max(1,AttacksRemaining-1);
  AdvanceEnemyTurn();
 }
@@ -489,7 +437,6 @@ void ULLGameInstance::AdvanceEnemyTurn()
    if(EnemyStatus==TEXT("poison")||EnemyStatus==TEXT("burn"))
     EnemyHP=FMath::Max(0,EnemyHP-4);
    --EnemyStatusTurns;
-   if(EnemyStatusTurns==0)EnemyStatus.Empty();
   }
   if(HeroHP<=0){Lose();return;}
   if(EnemyHP<=0){Win(GetWorld());return;}
@@ -521,7 +468,8 @@ void ULLGameInstance::ResolveAttack(bool bAttempt,bool bParry)
 {
  if(Phase!=ELLPhase::EnemyTiming)return;
  const float Target=AttackDuration*AttackFraction;
- const float Window=DefenseWindow(bParry);
+ const float T=FMath::Clamp(Level/100.0f,0.0f,1.0f);
+ const float Window=FMath::Lerp(bParry?.17f:.26f,bParry?.27f:.38f,T)+Assist;
  const bool Success=bAttempt&&FMath::Abs(Timing-Target)<=Window*.5f;
  int32 Dealt=0;
  if(Success)
@@ -541,7 +489,6 @@ void ULLGameInstance::ResolveAttack(bool bAttempt,bool bParry)
   HeroHP=FMath::Max(0,HeroHP-Damage);
   PushLog(FString::Printf(TEXT("ПРОМАХ: -%d HP"),Damage));
  }
- Cue(Success?(bParry?TEXT("parry"):TEXT("dodge")):TEXT("hit"),ActiveEnemy.Element);
  --AttacksRemaining;
  if(HeroHP<=0){Lose();return;}
  if(EnemyHP<=0){Win(GetWorld());return;}
@@ -550,11 +497,11 @@ void ULLGameInstance::ResolveAttack(bool bAttempt,bool bParry)
 
 void ULLGameInstance::GiveLoot()
 {
- if(Items.Num()>=Balance.MaxInventory||AllSkills.IsEmpty())return;
+ if(Items.Num()>=64||AllSkills.IsEmpty())return;
  FLLItem Item;Item.Id=FString::Printf(TEXT("loot_%d_%d"),Kills,Random.RandRange(100,999999));
  Item.Slot=(Random.RandRange(0,2)==0?TEXT("weapon"):
    (Random.RandRange(0,1)==0?TEXT("armor"):TEXT("charm")));
- Item.Rarity=(bElite||bSymbiote||ActiveEnemy.bBoss)?TEXT("rare"):TEXT("common");
+ Item.Rarity=bElite?TEXT("rare"):TEXT("common");
  Item.Grade=1;Item.Name=FString::Printf(TEXT("Echo %s %d"),*Item.Slot,Kills);
  int32 Count=bElite?Random.RandRange(2,3):Random.RandRange(1,3);
  for(int32 I=0;I<Count;++I)
@@ -568,10 +515,10 @@ void ULLGameInstance::GiveLoot()
 void ULLGameInstance::ApplyXP()
 {
  if(Level<=0)return;
- if(bDemo){PendingLoss=FMath::Min(Balance.DemoLosses,Level);return;}
- XP+=Balance.XPReward*(ActiveEnemy.bBoss?1.5f:1.f);
+ if(bDemo){PendingLoss=FMath::Min(5,Level);return;}
+ XP+=10.0f;
  int32 Losses=0;
- while(Level-Losses>0&&XP>=XPToLose(Level-Losses)&&Losses<Balance.MaxLosses)
+ while(Level-Losses>0&&XP>=XPToLose(Level-Losses)&&Losses<10)
  {
   XP-=XPToLose(Level-Losses);
   ++Losses;
@@ -581,14 +528,12 @@ void ULLGameInstance::ApplyXP()
 void ULLGameInstance::Win(UWorld* World)
 {
  if(!World)return;
- if(bFinal){Phase=ELLPhase::FinalVictory;bInBattle=false;bWon=true;Cue(TEXT("victory"));SaveRun();PushLog(TEXT("ПОБЕДА: ты пережил собственное прошлое"));return;}
+ if(bFinal){Phase=ELLPhase::FinalVictory;bInBattle=true;PushLog(TEXT("ПОБЕДА: ты пережил собственное прошлое"));return;}
  ++Kills;
  if(ActiveEnemy.bBoss&&!DefeatedBossIds.Contains(ActiveEnemy.Id))
  {DefeatedBossIds.Add(ActiveEnemy.Id);BossesWon=DefeatedBossIds.Num();}
  else if(!ActiveEnemy.bBoss)DefeatedIds.AddUnique(ActiveEnemy.Id);
  GiveLoot();ApplyXP();
- HeroHP=FMath::Min(MaxHP(),HeroHP+FMath::RoundToInt(MaxHP()*Balance.VictoryHeal));
- Cue(TEXT("victory"));
  PushLog(FString::Printf(TEXT("ПОБЕДА: добыча, уровни к потере = %d"),PendingLoss));
  bInBattle=false;
  Phase=PendingLoss>0?ELLPhase::LossChoice:ELLPhase::Exploration;
@@ -622,15 +567,12 @@ void ULLGameInstance::LevelLoss(int32 SelectedIndex)
   const FString Removed=Innate[Index].Display;Innate.RemoveAt(Index);
   const int32 RandomIndex=Random.RandRange(0,Innate.Num()-1);
   Innate.RemoveAt(RandomIndex);
-  TArray<FLLSkill> Pool;
-  for(const FLLSkill& Candidate:AllSkills)
-   if(!Innate.ContainsByPredicate([&](const FLLSkill& S){return S.Id==Candidate.Id;}))Pool.Add(Candidate);
-  if(!Pool.IsEmpty())Innate.Add(Pool[Random.RandRange(0,Pool.Num()-1)]);
+  const FLLSkill& RandomNew=AllSkills[Random.RandRange(0,AllSkills.Num()-1)];
+  Innate.Add(RandomNew);
   PushLog(TEXT("РАСПАД: ")+Removed+TEXT(" / -2 +1"));
  }
  else PushLog(TEXT("РАСПАД: набор пуст, пропуск без штрафа"));
  --Level;--PendingLoss;++LossesCompleted;
- SkillPage=FMath::Min(SkillPage,FMath::Max(0,(Innate.Num()-1)/5));
  HeroHP=FMath::Min(HeroHP,MaxHP());
  if(Level%5==0)++EvolutionSlots;
  if(PendingLoss<=0)CompleteLoss(GetWorld());
@@ -655,7 +597,7 @@ float ULLGameInstance::ForgeBreakChance(int32 A,int32 B) const
  if(!Items.IsValidIndex(A)||!Items.IsValidIndex(B)||A==B)return -1.0f;
  const int32 Grade=FMath::Max(Items[A].Grade,Items[B].Grade);
  if(Grade>=6)return -1.0f;
- return FMath::Min(.80f,Balance.ForgeBase+Balance.ForgeStep*(Grade-1));
+ return FMath::Min(.80f,.10f+.12f*(Grade-1));
 }
 void ULLGameInstance::CancelForge()
 {
@@ -727,7 +669,7 @@ bool ULLGameInstance::Evolve(int32 A,int32 B)
 {
  if(EvolutionSlots<=0||!Innate.IsValidIndex(A)||!Innate.IsValidIndex(B)||A==B)return false;
  FLLSkill First=Innate[A],Second=Innate[B];
- if(FMath::Max(First.Depth,Second.Depth)>=Balance.MaxDepth)return false;
+ if(FMath::Max(First.Depth,Second.Depth)>=4)return false;
  FLLSkill Merged;
  Merged.Id=FString::Printf(TEXT("evo_%d_%d"),LossesCompleted,Random.RandRange(1,999999));
  Merged.Name=First.Name+TEXT(" + ")+Second.Name;
@@ -735,25 +677,16 @@ bool ULLGameInstance::Evolve(int32 A,int32 B)
  Merged.Kind=First.Kind;Merged.Element=First.Element;
  Merged.Power=FMath::Min(40,First.Power+Second.Power/2);
  Merged.Status=Second.Status;Merged.Depth=FMath::Max(First.Depth,Second.Depth)+1;
- Merged.Parents={First.Id,Second.Id};
- Merged.Parents.Append(First.Parents);Merged.Parents.Append(Second.Parents);
  Innate.RemoveAt(FMath::Max(A,B));Innate.RemoveAt(FMath::Min(A,B));
  Innate.Add(Merged);--EvolutionSlots;
  PushLog(TEXT("СИМБИОЗ: ")+Merged.Display);SaveRun();return true;
 }
 
-FString ULLGameInstance::SerializeRun() const
+bool ULLGameInstance::SaveRun() const
 {
+ if(!bHasStarted)return false;
  TSharedPtr<FJsonObject> Root=MakeShared<FJsonObject>();
- Root->SetNumberField(TEXT("version"),3);
- Root->SetNumberField(TEXT("rng"),Random.GetCurrentSeed());
- Root->SetNumberField(TEXT("flasks"),Flasks);
- Root->SetBoolField(TEXT("won"),bWon);
- Root->SetBoolField(TEXT("muted"),bMuted);
- TArray<TSharedPtr<FJsonValue>> Chests,Shrines;
- for(int32 I:OpenedChests)Chests.Add(MakeShared<FJsonValueNumber>(I));
- for(int32 I:DiscoveredShrines)Shrines.Add(MakeShared<FJsonValueNumber>(I));
- Root->SetArrayField(TEXT("chests"),Chests);Root->SetArrayField(TEXT("shrines"),Shrines);
+ Root->SetNumberField(TEXT("version"),2);
  Root->SetNumberField(TEXT("level"),Level);Root->SetNumberField(TEXT("hp"),HeroHP);
  Root->SetNumberField(TEXT("kills"),Kills);Root->SetNumberField(TEXT("xp"),XP);
  Root->SetNumberField(TEXT("evolution_slots"),EvolutionSlots);
@@ -774,8 +707,6 @@ FString ULLGameInstance::SerializeRun() const
   O->SetStringField(TEXT("display"),S.Display);O->SetStringField(TEXT("element"),S.Element);
   O->SetStringField(TEXT("kind"),S.Kind);O->SetStringField(TEXT("status"),S.Status);
   O->SetNumberField(TEXT("power"),S.Power);O->SetNumberField(TEXT("depth"),S.Depth);
-  O->SetNumberField(TEXT("cost"),S.Cost);
-  O->SetArrayField(TEXT("parents"),LL::Values(S.Parents));
   InnateValues.Add(MakeShared<FJsonValueObject>(O));
  }
  Root->SetArrayField(TEXT("innate"),InnateValues);
@@ -790,17 +721,6 @@ FString ULLGameInstance::SerializeRun() const
   ItemValues.Add(MakeShared<FJsonValueObject>(O));
  }
  Root->SetArrayField(TEXT("items"),ItemValues);
- TArray<TSharedPtr<FJsonValue>> FrozenGear;
- for(const FLLItem& I:SnapshotGear)
- {
-  auto O=MakeShared<FJsonObject>();O->SetStringField(TEXT("id"),I.Id);
-  O->SetStringField(TEXT("name"),I.Name);O->SetStringField(TEXT("slot"),I.Slot);
-  O->SetStringField(TEXT("rarity"),I.Rarity);O->SetNumberField(TEXT("grade"),I.Grade);
-  O->SetArrayField(TEXT("skills"),LL::Values(I.Skills));
-  O->SetArrayField(TEXT("sealed"),LL::Values(I.Sealed));
-  FrozenGear.Add(MakeShared<FJsonValueObject>(O));
- }
- Root->SetArrayField(TEXT("snapshot_gear"),FrozenGear);
  auto E=MakeShared<FJsonObject>();
  for(const auto& Pair:Equipped)E->SetStringField(Pair.Key,Pair.Value);
  Root->SetObjectField(TEXT("equipped"),E);
@@ -810,7 +730,71 @@ FString ULLGameInstance::SerializeRun() const
  Pos->SetNumberField(TEXT("z"),SavedWorldLocation.Z);
  Root->SetObjectField(TEXT("location"),Pos);
  FString Text;const auto Writer=TJsonWriterFactory<>::Create(&Text);
- if(!FJsonSerializer::Serialize(Root.ToSharedRef(),Writer))return FString();
- return Text;
+ if(!FJsonSerializer::Serialize(Root.ToSharedRef(),Writer))return false;
+ const FString Dir=FPaths::Combine(FPaths::ProjectSavedDir(),TEXT("SaveGames"));
+ IFileManager::Get().MakeDirectory(*Dir,true);
+ const FString Path=FPaths::Combine(Dir,TEXT("LastLightUE.json"));
+ return FFileHelper::SaveStringToFile(Text,*Path,FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
 }
 
+bool ULLGameInstance::LoadRun(UWorld* World)
+{
+ if(!World)return false;
+ FString Text;
+ const FString Path=FPaths::Combine(FPaths::ProjectSavedDir(),TEXT("SaveGames"),TEXT("LastLightUE.json"));
+ if(!FFileHelper::LoadFileToString(Text,*Path))return false;
+ TSharedPtr<FJsonObject> O;
+ if(!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(Text),O)||!O.IsValid())return false;
+ Level=LL::Int(O,TEXT("level"),100);HeroHP=LL::Int(O,TEXT("hp"),120);
+ Kills=LL::Int(O,TEXT("kills"));XP=static_cast<float>(O->GetNumberField(TEXT("xp")));
+ EvolutionSlots=LL::Int(O,TEXT("evolution_slots"));
+ PendingLoss=FMath::Clamp(LL::Int(O,TEXT("pending_loss")),0,100);
+ LossesCompleted=LL::Int(O,TEXT("losses_completed"));
+ SkillPage=0;
+ CurrentBiome=LL::Int(O,TEXT("biome"));bDemo=O->GetBoolField(TEXT("demo"));
+ double SavedAssist=0.0;
+ O->TryGetNumberField(TEXT("timing_assist"),SavedAssist);
+ Assist=FMath::Clamp(static_cast<float>(SavedAssist),0.0f,.16f);
+ ChosenStart=LL::Strings(O,TEXT("chosen_start"));
+ DefeatedIds=LL::Strings(O,TEXT("defeated_ids"));
+ DefeatedBossIds=LL::Strings(O,TEXT("defeated_boss_ids"));
+ BossesWon=DefeatedBossIds.Num();
+ const auto InnateValues=O->GetArrayField(TEXT("innate"));Innate.Empty();
+ for(const auto& Value:InnateValues)
+ {
+  auto Entry=Value->AsObject();if(!Entry.IsValid())continue;
+  FLLSkill S;S.Id=LL::Str(Entry,TEXT("id"));S.Name=LL::Str(Entry,TEXT("name"));
+  S.Display=LL::Str(Entry,TEXT("display"));S.Element=LL::Str(Entry,TEXT("element"));
+  S.Kind=LL::Str(Entry,TEXT("kind"));S.Status=LL::Str(Entry,TEXT("status"));
+  S.Power=LL::Int(Entry,TEXT("power"));S.Depth=LL::Int(Entry,TEXT("depth"));
+  Innate.Add(S);
+ }
+ Snapshot.Empty();for(const FString& Id:ChosenStart)
+ {if(const FLLSkill* S=FindSkill(Id))Snapshot.Add(*S);}
+ Items.Empty();
+ const auto ItemValues=O->GetArrayField(TEXT("items"));
+ for(const auto& Value:ItemValues)
+ {
+  auto Entry=Value->AsObject();if(!Entry.IsValid())continue;
+  FLLItem I;I.Id=LL::Str(Entry,TEXT("id"));I.Name=LL::Str(Entry,TEXT("name"));
+  I.Slot=LL::Str(Entry,TEXT("slot"));I.Rarity=LL::Str(Entry,TEXT("rarity"));
+  I.Grade=LL::Int(Entry,TEXT("grade"),1);
+  I.Skills=LL::Strings(Entry,TEXT("skills"));I.Sealed=LL::Strings(Entry,TEXT("sealed"));Items.Add(I);
+ }
+ Equipped.Empty();
+ auto Equ=O->GetObjectField(TEXT("equipped"));
+ for(const TCHAR* Slot:{TEXT("weapon"),TEXT("armor"),TEXT("charm")})
+ {
+  FString Id;
+  if(Equ->TryGetStringField(Slot,Id))Equipped.Add(FString(Slot),Id);
+ }
+ auto Pos=O->GetObjectField(TEXT("location"));
+ SavedWorldLocation=FVector(Pos->GetNumberField(TEXT("x")),
+  Pos->GetNumberField(TEXT("y")),Pos->GetNumberField(TEXT("z")));
+ bHasStarted=true;bInBattle=false;
+ Phase=PendingLoss>0?ELLPhase::LossChoice:ELLPhase::Exploration;
+ SetNotice(PendingLoss>0?TEXT("Saved descent resumed: choose a skill to lose"):
+   TEXT("Saved run loaded successfully"));
+ UGameplayStatics::OpenLevel(World,FName(TEXT("/Game/Maps/Explore")));
+ return true;
+}

@@ -145,11 +145,6 @@ void ALLHero::Tick(float DeltaSeconds)
  {
   if(GI->Phase==ELLPhase::Exploration&&!GI->bInBattle)
   {
-   if(GetActorLocation().Z<-450||GetActorLocation().Y>2900||GetActorLocation().Y<-2900)
-   {
-    SetActorLocation(FVector(GI->CurrentBiome*2000.f+100,-650,165));
-    GI->SetNotice(TEXT("Свет вернул тебя на путь. Прогресс не потерян."));
-   }
    GI->SavedWorldLocation=GetActorLocation();
    GI->CurrentBiome=FMath::Clamp(FMath::FloorToInt(
     GetActorLocation().X/2000.f),0,4);
@@ -199,9 +194,6 @@ void ALLHero::SetupPlayerInputComponent(UInputComponent* Input)
  Input->BindKey(EKeys::K,IE_Pressed,this,&ALLHero::FinalPressed);
  Input->BindKey(EKeys::H,IE_Pressed,this,&ALLHero::HelpPressed);
  Input->BindKey(EKeys::F2,IE_Pressed,this,&ALLHero::AssistPressed);
- Input->BindKey(EKeys::T,IE_Pressed,this,&ALLHero::ShrinePressed);
- Input->BindKey(EKeys::C,IE_Pressed,this,&ALLHero::FlaskPressed);
- Input->BindKey(EKeys::F3,IE_Pressed,this,&ALLHero::MutePressed);
 }
 void ALLHero::MoveForward(float V)
 {
@@ -290,11 +282,7 @@ void ALLHero::Pick(int32 Index)
  if(GI->Phase==ELLPhase::BattlePlayer)GI->UseSkill(
   Index==0?0:(Index==1?1:2+GI->SkillPage*5+Index-2));
  else if(GI->Phase==ELLPhase::Menu)
- {
-  const auto Indices=GI->FilteredSkills();
-  const int32 At=GI->MenuPage*10+Index;
-  if(Indices.IsValidIndex(At))GI->ToggleStartSkill(Indices[At]);
- }
+  GI->ToggleStartSkill(GI->MenuPage*5+Index);
  else if(GI->Phase==ELLPhase::LossChoice)GI->LevelLoss(GI->SkillPage*5+Index);
  else if(GI->Phase==ELLPhase::Inventory)GI->Equip(GI->ItemPage*5+Index);
  else if(GI->Phase==ELLPhase::Forge)
@@ -317,7 +305,12 @@ void ALLHero::UseSix(){Pick(5);}
 void ALLHero::UseSeven(){Pick(6);}
 void ALLHero::NextPage()
 {
- if(ULLGameInstance* GI=Game())GI->NextPage();
+ ULLGameInstance* GI=Game();if(!GI)return;
+ if(GI->Phase==ELLPhase::Menu)GI->MenuPage=(GI->MenuPage+1)%20;
+ else if(GI->Phase==ELLPhase::Inventory||GI->Phase==ELLPhase::Forge)
+  GI->ItemPage=(GI->ItemPage+1)%FMath::Max(1,FMath::CeilToInt(GI->Items.Num()/5.0f));
+ else GI->SkillPage=(GI->SkillPage+1)%FMath::Max(1,
+  FMath::CeilToInt(GI->GetSkills().Num()/5.0f));
 }
 void ALLHero::EndTurn()
 {
@@ -325,7 +318,8 @@ void ALLHero::EndTurn()
  if(GI->Phase==ELLPhase::BattlePlayer){GI->EndPlayerTurn();return;}
  if(GI->Phase==ELLPhase::Exploration)
  {
-  GI->Hunt(GetWorld());
+  int32 Index=FMath::Clamp(GI->CurrentBiome*6,0,GI->Mobs.Num()-1);
+  GI->Engage(GetWorld(),Index,false,false,false,GetActorLocation());
  }
 }
 void ALLHero::SavePressed(){if(ULLGameInstance* GI=Game())GI->SetNotice(
@@ -362,8 +356,7 @@ void ALLHero::BackPressed()
  {GI->CancelForge();return;}
  if(GI->Phase==ELLPhase::Inventory||GI->Phase==ELLPhase::Forge||
   GI->Phase==ELLPhase::Evolution||GI->Phase==ELLPhase::Map)
- {GI->Phase=ELLPhase::Exploration;GI->CancelForge();return;}
- GI->TogglePause();
+ {GI->Phase=ELLPhase::Exploration;GI->CancelForge();}
 }
 void ALLHero::SelectNext()
 {
@@ -382,14 +375,3 @@ bool ALLHero::HandleHUDClick()
 void ALLHero::MousePressed(){HandleHUDClick();}
 void ALLHero::HelpPressed(){bHelp=!bHelp;}
 void ALLHero::AssistPressed(){if(ULLGameInstance* GI=Game())GI->CycleTimingAssist();}
-void ALLHero::ShrinePressed(){if(ULLGameInstance* GI=Game())GI->InteractSanctuary(GetWorld());}
-void ALLHero::FlaskPressed(){if(ULLGameInstance* GI=Game())GI->UseFlask();}
-void ALLHero::MutePressed(){if(ULLGameInstance* GI=Game())GI->bMuted=!GI->bMuted;}
-void ALLHero::PlayFeedback(const FString& Cue)
-{
- CurrentVisualClip.Empty();
- if(Cue==TEXT("strike")){SetVisualClip(AttackAnim,false);ActionVisualTime=.65f;}
- else if(Cue==TEXT("hit")){SetVisualClip(HitAnim,false);ActionVisualTime=.45f;}
- else if(Cue==TEXT("dodge")){SetVisualClip(DodgeAnim,false);ActionVisualTime=.5f;}
- else if(Cue==TEXT("parry")){SetVisualClip(GuardAnim,false);ActionVisualTime=.5f;}
-}

@@ -1,5 +1,5 @@
 $ErrorActionPreference="Stop"
-$root="E:\LastLightUnreal\LastLightUE"
+$root=Split-Path $PSScriptRoot -Parent
 $proj=Join-Path $root "LastLightUE.uproject"
 $engine="C:\Program Files\Epic Games\UE_5.8"
 $out="E:\LastLightUnreal\Releases_v07"

@@ -18,3 +18,6 @@
 *.cs text eol=lf
 *.py text eol=lf
 *.ps1 text eol=lf
+
+# Audited receipts are immutable raw bytes; LF normalization would alter SHA-256.
+Docs/Receipts/*.json binary

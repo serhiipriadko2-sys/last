@@ -8,7 +8,7 @@ $log='E:\LastLightUnreal\UE_AUTOMATION_V07.log'
 if(-not(Test-Path $editor)){throw 'UNREAL_EDITOR_NOT_FOUND'}
 if(-not(Test-Path $project)){throw 'UPROJECT_NOT_FOUND'}
 New-Item -ItemType Directory -Force -Path $report | Out-Null
-& $editor $project -nullrhi -unattended -nop4 '-ExecCmds=Automation RunTest LastLight.Migration;Quit' "-ReportExportPath=$report" "-abslog=$log"
+& $editor $project -nullrhi -unattended -nop4 '-ExecCmds=Automation RunTests LastLight.Migration' '-TestExit=Automation Test Queue Empty' "-ReportExportPath=$report" "-abslog=$log"
 $exitCode=$LASTEXITCODE
 if($exitCode -ne 0){throw "UE_AUTOMATION_EXEC_EXIT=$exitCode"}
 $index=Join-Path $report 'index.json'
