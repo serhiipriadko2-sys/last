@@ -8,7 +8,7 @@
 - `python tests/interaction_smoke.py`: PASS, timing parry and failed dodge, loss, fuse, save/load
 - `python tests/battle_playthrough.py`: PASS, genuine battle win via ordinary attacks and timed parries
 - `python tools/verify_sot30.py`: PASS, all 30 source hashes and lengths
-- Packaged ZIP: `LastLight_Prototype_v0.2.0_Windows.zip` (external chat artifact), 4,493,114 bytes, SHA-256 `aca25812fbffedbbd7965666adf9d8f66cce0f7ec641fe7773a1a1b8018da4d6`, 59 files, ZIP CRC + path-safety + round-trip SHA checks: PASS.
+- Packaged ZIP: `LastLight_Prototype_v0.2.0_Windows.zip` (external chat artifact), 4,493,199 bytes, SHA-256 `1a8f6791cfa7a1791c9c1bd8f52104f62f43b3978e2704b1b195f33fd8ebae60`, 59 files, ZIP CRC + path-safety + round-trip SHA checks: PASS.
 
 ## GitHub readback
 
