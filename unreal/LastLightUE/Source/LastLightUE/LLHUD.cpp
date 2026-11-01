@@ -8,10 +8,6 @@
 #include "Engine/Font.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Engine/GameViewportClient.h"
-#include "Widgets/SOverlay.h"
-#include "Widgets/Layout/SBox.h"
-#include "Widgets/Input/SEditableTextBox.h"
 
 namespace LLUI
 {
@@ -67,8 +63,6 @@ void ALLHUD::DrawHUD()
  ULLGameInstance* GI=GetWorld()?GetWorld()->GetGameInstance<ULLGameInstance>():nullptr;
  if(!GI)return;
  Zones.Reset();ButtonsThisFrame=0;
- UpdateSearch(GI);
- if(GI->Phase==ELLPhase::Paused){DrawPause(GI);return;}
  if(GI->Phase==ELLPhase::Menu){DrawMainMenu(GI);return;}
  if(GI->Phase==ELLPhase::FinalVictory||GI->Phase==ELLPhase::Defeat)
  {DrawResult(GI);return;}
@@ -110,7 +104,6 @@ void ALLHUD::DrawStats(const ULLGameInstance* GI)
  }
  const TCHAR* AssistLabel=GI->Assist>.12f?TEXT("ШИРОКОЕ"):(GI->Assist>.03f?TEXT("УМЕРЕННОЕ"):TEXT("ОБЫЧНОЕ"));
  Text(FString::Printf(TEXT("F2  ·  ТАЙМИНГ: %s"),AssistLabel),34,210,LLUI::MUTED,1.05f);
- Text(FString::Printf(TEXT("C  ФЛЯГИ %d/3   ·   ESC ПАУЗА"),GI->Flasks),34,247,LLUI::WHITE,1.08f);
 }
 
 void ALLHUD::DrawWorld(const ULLGameInstance* GI)
@@ -134,10 +127,7 @@ void ALLHUD::DrawWorld(const ULLGameInstance* GI)
  Button(1233,484,160,42,TEXT("F5  СОХРАНИТЬ"),TEXT("save"));
  Button(1401,484,166,42,TEXT("F9  ЗАГРУЗИТЬ"),TEXT("load"));
  Text(TEXT("Shift бег  ·  Space прыжок  ·  ПКМ камера  ·  H помощь"),
-  700,844,LLUI::WHITE,1.08f);
- Button(1233,565,334,42,TEXT("T  ·  СВЯТИЛИЩЕ / ТАЙНИК"),TEXT("interact"));
- Text(GI->Level==0?TEXT("ЦЕЛЬ: встреть себя в зеркале [K]"):
-  TEXT("ЦЕЛЬ: исследуй, собирай добычу, спускайся к нулю"),360,146,LLUI::GOLD,1.1f);
+  356,844,LLUI::WHITE,1.12f);
 }
 void ALLHUD::DrawBattle(const ULLGameInstance* GI)
 {
@@ -168,9 +158,6 @@ void ALLHUD::DrawBattle(const ULLGameInstance* GI)
   Button(1232,557,336,46,TEXT("F  ·  ЗАВЕРШИТЬ ХОД"),TEXT("endturn"),-1,true);
   Text(FString::Printf(TEXT("Доступно %d навыков"),Skills.Num()),
    1236,615,LLUI::MUTED,1.10f);
-  Button(1232,686,336,42,FString::Printf(TEXT("C  ФЛЯГА (%d) · +55%% HP · 1 ОД"),GI->Flasks),TEXT("flask"));
-  Text(TEXT("Слабость: ")+GI->ActiveEnemy.Weakness,360,149,LLUI::GOLD,1.10f);
-  if(GI->bFinal)Text(FString::Printf(TEXT("ЗЕРКАЛО · ФАЗА %d / 3"),GI->MirrorPhase),360,179,LLUI::GOLD,1.25f);
  }
  else if(GI->Phase==ELLPhase::AttackTiming)
  {
@@ -190,19 +177,15 @@ void ALLHUD::DrawBattle(const ULLGameInstance* GI)
 }
 void ALLHUD::DrawTiming(const ULLGameInstance* GI)
 {
- Panel(415,655,760,112,GI->Phase==ELLPhase::AttackTiming?
+ Panel(415,715,760,112,GI->Phase==ELLPhase::AttackTiming?
   TEXT("SPACE  ·  ТОЧНЫЙ УДАР 67%"):TEXT("Q ПАРИРОВАТЬ   /   E УКЛОНИТЬСЯ"));
  const float Ratio=GI->Phase==ELLPhase::AttackTiming?
   FMath::Clamp(GI->Timing/1.05f,0.f,1.f):
   FMath::Clamp(GI->Timing/FMath::Max(.1f,GI->AttackDuration),0.f,1.f);
  const float Target=GI->Phase==ELLPhase::AttackTiming?.67f:GI->AttackFraction;
- const float Duration=GI->Phase==ELLPhase::AttackTiming?1.05f:GI->AttackDuration;
- const float Window=GI->Phase==ELLPhase::AttackTiming?(.29f+GI->Assist*.9f):GI->DefenseWindow(true);
- Fill(440,719,710,24,LLUI::BG);
- Fill(440+710*(Target-Window/Duration*.5f),713,710*Window/Duration,36,LLUI::GREEN);
- Fill(440+710*Target-2,710,4,42,LLUI::GOLD);
- Fill(440+710*Ratio-2,709,5,44,LLUI::WHITE);
- Text(TEXT("Белый курсор → золотая отметка"),654,692,LLUI::WHITE,1.10f);
+ Bar(440,779,710,24,Ratio,1.f,LLUI::GOLD);
+ Fill(440+710*Target-2,772,5,36,LLUI::WHITE);
+ Text(TEXT("Нажми на золотой метке!"),654,752,LLUI::WHITE,1.10f);
 }
 void ALLHUD::DrawMainMenu(const ULLGameInstance* GI)
 {

@@ -10,7 +10,6 @@ struct FLLSkill
  FString Id, Name, Display, Element, Kind, Status;
  int32 Power=8, Cost=1, Depth=0;
  bool bSignature=false;
- TArray<FString> Parents;
 };
 
 struct FLLEnemy
@@ -31,17 +30,7 @@ struct FLLItem
 enum class ELLPhase : uint8
 {
  Menu, Exploration, BattlePlayer, AttackTiming, EnemyTiming, LossChoice,
- Defeat, FinalVictory, Inventory, Forge, Evolution, Map, Paused
-};
-
-struct FLLBalance
-{
- int32 Loadout=50, MaxLosses=12, DemoLosses=5, MaxInventory=64, MaxDepth=4;
- int32 HPStart=120, HPEnd=70, BasicDamage=8;
- float XPBase=120.f, XPK=.96f, XPReward=120.f, Difficulty=1.6f;
- float ParryStart=.27f, ParryEnd=.17f, DodgeStart=.38f, DodgeEnd=.26f;
- float ForgeBase=.10f, ForgeStep=.12f, VictoryHeal=.25f;
- bool bDemo=false;
+ Defeat, FinalVictory, Inventory, Forge, Evolution, Map
 };
 
 UCLASS()
@@ -51,19 +40,9 @@ class LASTLIGHTUE_API ULLGameInstance : public UGameInstance
 public:
  virtual void Init() override;
  bool LoadDatabase();
- bool LoadBalance();
  ELLPhase Phase=ELLPhase::Menu;
  bool bInBattle=false, bDemo=true, bElite=false, bFinal=false, bGuarded=false, bPerfectAttack=false;
  bool bHasStarted=false;
- bool bSymbiote=false, bWon=false, bMuted=false;
- ELLPhase ResumePhase=ELLPhase::Exploration;
- FLLBalance Balance;
- int32 Flasks=3, MirrorPhase=1;
- int32 MenuElement=0, MenuKind=0, MenuSort=0;
- FString MenuSearch;
- bool bSearchFocused=false;
- FString LastCue, LastElement=TEXT("physical");
- int32 CueSerial=0;
  int32 Level=100, HeroHP=120, Kills=0, EvolutionSlots=0, BossesWon=0;
  int32 AP=2, Focus=0, Turn=1, EnemyHP=0, EnemyMaxHP=0, EnemyDamage=0;
  int32 PendingLoss=0, LossesCompleted=0, AttackIndex=0, AttacksRemaining=0;
@@ -79,10 +58,8 @@ public:
  TArray<FLLSkill> AllSkills, Innate, Snapshot;
  TArray<FLLEnemy> Mobs, Bosses;
  TArray<FLLItem> Items;
- TArray<FLLItem> SnapshotGear;
  TMap<FString,FString> Equipped;
  TArray<FString> ChosenStart, DefeatedIds, DefeatedBossIds;
- TArray<int32> OpenedChests, DiscoveredShrines;
  TArray<FString> BattleLog;
  FRandomStream Random;
 
@@ -130,22 +107,6 @@ public:
  FString EnemyDisplay() const;
  bool IsMinibossUnlocked(int32 Index) const;
  bool CanEnterFinal() const { return Level==0; }
- TArray<int32> FilteredSkills() const;
- void NextPage();
- void Hunt(UWorld* World);
- void InteractSanctuary(UWorld* World);
- bool OpenChest(int32 Zone);
- bool Rest(int32 Zone);
- bool Travel(UWorld* World,int32 Zone);
- bool UseFlask();
- bool ReinforceEquipment();
- void TogglePause();
- void Cue(const FString& Name,const FString& Element=TEXT("physical"));
- float DefenseWindow(bool bParry) const;
- float SnapshotPower() const;
- FString SavePath() const;
- FString SerializeRun() const;
- bool RestoreRun(const FString& Text);
 
 private:
  bool LoadSkillArray(const FString& File);

@@ -4,7 +4,6 @@
 #include "LLHUD.generated.h"
 class UFont;
 class ULLGameInstance;
-class SWidget;
 struct FLLClickZone
 {
  FBox2D Box;
@@ -17,17 +16,12 @@ class LASTLIGHTUE_API ALLHUD : public AHUD
  GENERATED_BODY()
 public:
  virtual void DrawHUD() override;
- virtual void EndPlay(const EEndPlayReason::Type Reason) override;
  bool HandleClick(float ScreenX,float ScreenY);
  int32 ButtonsThisFrame=0;
 private:
  TArray<FLLClickZone> Zones;
  UPROPERTY() TObjectPtr<UFont> DisplayFont;
  float Scale=1.f;
- TSharedPtr<SWidget> SearchWidget;
- float SearchScale=0.f;
- void UpdateSearch(ULLGameInstance* GI);
- void DrawPause(const ULLGameInstance* GI);
  void Fill(float X,float Y,float W,float H,FLinearColor Color);
  void Text(const FString& Str,float X,float Y,
   FLinearColor Color=FLinearColor::White,float Size=1.3f);

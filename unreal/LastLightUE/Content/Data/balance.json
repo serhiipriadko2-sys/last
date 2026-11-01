@@ -2,12 +2,12 @@
   "start_level": 100,
   "loadout_size": 50,
   "test_loadout_size": 15,
-  "xp_base": 120.0,
+  "xp_base": 300.0,
   "xp_k": 0.96,
-  "xp_per_enemy": 120.0,
+  "xp_per_enemy": 10.0,
   "demo_losses_per_win": 5,
-  "demo_default": false,
-  "max_losses_per_encounter": 12,
+  "demo_default": true,
+  "max_losses_per_encounter": 10,
   "parry_window_level100": 0.27,
   "parry_window_level0": 0.17,
   "dodge_window_level100": 0.38,
@@ -21,8 +21,5 @@
   "basic_damage": 8,
   "loot_drop_chance": 1.0,
   "arena_zones": 5,
-  "default_window_assist": 0.0,
-  "forge_break_base": 0.1,
-  "forge_break_step": 0.12,
-  "victory_heal_fraction": 0.25
+  "default_window_assist": 0.0
 }

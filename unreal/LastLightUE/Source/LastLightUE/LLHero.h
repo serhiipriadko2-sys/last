@@ -21,7 +21,6 @@ public:
  bool bOrbiting=false,bSprinting=false,bHelp=false;
  UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Camera") TObjectPtr<USpringArmComponent> CameraBoom;
  UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Camera") TObjectPtr<UCameraComponent> Camera;
- void PlayFeedback(const FString& Cue);
 private:
  UPROPERTY() TObjectPtr<UStaticMeshComponent> Torso;
  UPROPERTY() TObjectPtr<UStaticMeshComponent> Head;
@@ -81,9 +80,6 @@ private:
  void MousePressed();
  void HelpPressed();
  void AssistPressed();
- void ShrinePressed();
- void FlaskPressed();
- void MutePressed();
  bool HandleHUDClick();
  int32 MenuCursor=0;
 };
