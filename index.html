@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><title>LAST LIGHT: THE DESCENT</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game"><canvas id="scene" aria-label="Three-dimensional game world"></canvas>
+<div id="vignette"></div><div id="grain"></div>
+<header id="top" class="hidden">
+<div class="brand"><span class="sun-mark">&#9673;</span><div><b>LAST LIGHT</b><small>THE DESCENT</small></div></div>
+<div class="level-wrap"><span>THE BURDEN</span><strong id="levelText">100</strong><span>LEVEL</span><div class="meter"><i id="xpBar"></i></div></div>
+<div class="hud-right"><div><span>VITALITY</span> <b id="hpText">100 / 100</b></div><div class="hp-track"><i id="hpBar"></i></div><div class="mini-stats" id="resourceText"></div></div>
+</header>
+<div id="worldLabel" class="hidden"><div class="eyebrow">THE HOLLOW CROWN</div><h1 id="locationName">ASHEN COURTYARD</h1><p id="missionText">Find the fading sigil</p></div>
+<div id="crosshair" class="hidden">+</div><div id="interact" class="hidden"></div>
+<div id="telegraph" class="hidden"><div class="tele-heading">INCOMING STRIKE</div><div class="timeline"><div class="window" id="safeZone"></div><div class="needle" id="needle"></div></div><div id="defenseText">Q DODGE &nbsp; F PARRY</div></div>
+<div id="battleUI" class="hidden"><div class="enemy-ui"><span id="enemyType">FALLEN</span><h2 id="enemyName">ASH GUARD</h2><div class="enemy-hp"><i id="enemyHpBar"></i></div><div id="enemyInfo"></div></div><div class="combat-bottom"><div class="turn-row"><span id="turnLabel">YOUR TURN</span><span id="apLabel">AP 2/2</span><span id="battleHint">Choose an action</span></div><div class="actions" id="actions"></div><div class="combat-controls">[1] ATTACK &nbsp; [2-5] SKILLS &nbsp; [H] HEAL &nbsp; [SPACE] END TURN</div></div></div>
+<div id="bottomHelp" class="hidden"><span>W A S D &nbsp; MOVE</span><span>E &nbsp; INTERACT</span><span>G &nbsp; INVENTORY / FORGE</span><span>ESC &nbsp; MENU</span></div>
+<div id="toast" role="status"></div><div id="modal" class="hidden"><div class="panel" id="modalContent"></div></div>
+<div id="start" class="veil"><div class="intro-glow"></div><div class="start-copy"><span class="eyebrow">A GAME ABOUT LEARNING TO LOSE</span><h1>LAST<br><em>LIGHT</em></h1><div class="divider-gold"></div><p>You were everything. At the end of the world,<br>you must become enough.</p><div class="start-buttons"><button class="primary" id="startNew">BEGIN DESCENT <span>&#10230;</span></button><button class="secondary" id="startContinue">CONTINUE</button></div><div class="smallprint">A SELF-CONTAINED 3D TURN-BASED RPG PROTOTYPE &bull; PC</div></div></div>
+</div>
+<script src="js/data.js"></script><script src="js/renderer.js"></script><script src="js/game.js"></script>
+</body></html>
