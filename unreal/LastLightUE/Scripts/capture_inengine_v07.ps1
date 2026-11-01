@@ -33,6 +33,10 @@ try {
   Write-Host ('INENGINE_IMAGE='+$image+' WIDTH='+$bmp.Width+' HEIGHT='+$bmp.Height+' BYTES='+(Get-Item $image).Length)
  }finally{$bmp.Dispose()}
  Write-Host ('INENGINE_IMAGE_SHA256='+((Get-FileHash $image -Algorithm SHA256).Hash.ToLower()))
+ $evidence=Join-Path $root ('Releases_v07\Evidence\'+$Target+'_v07.png')
+ New-Item -ItemType Directory -Force -Path (Split-Path $evidence -Parent) | Out-Null
+ Copy-Item -LiteralPath $image -Destination $evidence -Force
+ Write-Host ('INENGINE_EVIDENCE='+$evidence+' BYTES='+(Get-Item $evidence).Length+' SHA256='+((Get-FileHash $evidence -Algorithm SHA256).Hash.ToLower()))
 } finally{
  if(-not $proc.HasExited){Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue}
  Write-Host 'INENGINE_CAPTURE_PROCESS_CLEANUP_COMPLETE'

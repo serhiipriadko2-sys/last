@@ -40,7 +40,8 @@ if SHOT.is_file():
     header=SHOT.read_bytes()[:24]
     shot_valid=(header[:8]==bytes([137,80,78,71,13,10,26,10]) and
                 int.from_bytes(header[16:20],"big")==1280 and
-                int.from_bytes(header[20:24],"big")==720)
+                int.from_bytes(header[20:24],"big")==720 and
+                (not BUILD.is_file() or SHOT.stat().st_mtime>=BUILD.stat().st_mtime))
 check("unreal_native_visual_evidence",shot_valid,
       "rendered 1280x720 PNG saved outside distributable files")
 pak_counts={}
@@ -88,7 +89,7 @@ status="PASS" if passcount==len(checks) else "PARTIAL"
 receipt={
     "format":"lastlight.unreal.windows.release.v1",
     "observed_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),
-    "project":"E:\\LastLightUnreal\\LastLightUE",
+    "project":str(pathlib.Path(__file__).resolve().parents[1]),
     "engine":"Unreal Engine 5.8.4",
     "build_variant":"Windows x64 Development",
     "release_status":status,
@@ -115,7 +116,7 @@ receipt={
         "input latency, audio, accessibility and gameplay balance not formally certified",
         "Godot save compatibility not implemented",
         "static code tests do not establish cosmetic animation quality"],
-    "rollback":"E:\\LastLightUnreal\\Releases_v02\\Windows (known packaged Arena travel FAILURE); keep Godot v0.6 as working fallback"
+    "rollback":str(BASE/"Releases_v06"/"Windows")+" (verified packaged Unreal V06 fallback)"
 }
 OUT.parent.mkdir(parents=True,exist_ok=True)
 OUT.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding="utf-8")
