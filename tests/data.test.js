@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const context={window:{},Math,Date};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../js/data.js'),'utf8'),context);
+const D=context.window.LAST_DATA;
+assert.equal(D.skills.length,130);assert.equal(new Set(D.skills.map(s=>s.id)).size,130);
+assert.equal(D.skills.filter(s=>s.id.startsWith('U')).length,30);
+assert.equal(D.enemies.length,30);assert.equal(D.minibosses.length,9);
+assert.equal(D.minibosses[0].threshold,90);assert.equal(D.minibosses[8].threshold,10);
+assert.equal(D.expToLose(100),3000);assert.ok(D.expToLose(0)<D.expToLose(90));
+assert.ok(Math.abs(D.breakChance(1)-.1)<1e-9);
+assert.ok(Math.abs(D.breakChance(5)-.58)<1e-9);
+assert.ok(Math.abs(D.breakChance(6)-.70)<1e-9);
+const item=D.generateItem(50,()=>.2);assert.ok(item.skills.length>=1&&item.skills.length<=3);
+assert.ok(D.enemyScaling(0).damage>D.enemyScaling(100).damage);
+console.log('PASS: skills=130, enemies=30, minibosses=9, curves+fusion math valid');
