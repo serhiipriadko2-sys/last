@@ -1,0 +1,559 @@
+[
+  {
+    "id": "M01",
+    "name": "Ash Wolf",
+    "element": "fire",
+    "weakness": "poison",
+    "shape": "wolf",
+    "hp": 25,
+    "damage": 5,
+    "speed": 0.5,
+    "color": "e98c57",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "burn"
+  },
+  {
+    "id": "M02",
+    "name": "Cinder Moth",
+    "element": "fire",
+    "weakness": "poison",
+    "shape": "moth",
+    "hp": 27,
+    "damage": 5,
+    "speed": 0.65,
+    "color": "e98c57",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "burn"
+  },
+  {
+    "id": "M03",
+    "name": "Coal Devourer",
+    "element": "fire",
+    "weakness": "poison",
+    "shape": "titan",
+    "hp": 29,
+    "damage": 5,
+    "speed": 0.8,
+    "color": "e98c57",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "burn"
+  },
+  {
+    "id": "M04",
+    "name": "Frost Wisp",
+    "element": "ice",
+    "weakness": "earth",
+    "shape": "wisp",
+    "hp": 31,
+    "damage": 6,
+    "speed": 0.95,
+    "color": "8dcce8",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "freeze"
+  },
+  {
+    "id": "M05",
+    "name": "Glacier Stag",
+    "element": "ice",
+    "weakness": "earth",
+    "shape": "stag",
+    "hp": 33,
+    "damage": 6,
+    "speed": 1.1,
+    "color": "8dcce8",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "freeze"
+  },
+  {
+    "id": "M06",
+    "name": "Crystal Sentinel",
+    "element": "ice",
+    "weakness": "earth",
+    "shape": "sentinel",
+    "hp": 35,
+    "damage": 6,
+    "speed": 1.25,
+    "color": "8dcce8",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "freeze"
+  },
+  {
+    "id": "M07",
+    "name": "Wire Wasp",
+    "element": "lightning",
+    "weakness": "water",
+    "shape": "wasp",
+    "hp": 37,
+    "damage": 7,
+    "speed": 0.5,
+    "color": "d3b2ff",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "shock"
+  },
+  {
+    "id": "M08",
+    "name": "Storm Hound",
+    "element": "lightning",
+    "weakness": "water",
+    "shape": "hound",
+    "hp": 39,
+    "damage": 7,
+    "speed": 0.65,
+    "color": "d3b2ff",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "shock"
+  },
+  {
+    "id": "M09",
+    "name": "Thunder Golem",
+    "element": "lightning",
+    "weakness": "water",
+    "shape": "golem",
+    "hp": 41,
+    "damage": 7,
+    "speed": 0.8,
+    "color": "d3b2ff",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "shock"
+  },
+  {
+    "id": "M10",
+    "name": "Spore Widow",
+    "element": "poison",
+    "weakness": "wind",
+    "shape": "spider",
+    "hp": 43,
+    "damage": 8,
+    "speed": 0.95,
+    "color": "89c277",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "poison"
+  },
+  {
+    "id": "M11",
+    "name": "Briar Leech",
+    "element": "poison",
+    "weakness": "wind",
+    "shape": "leech",
+    "hp": 45,
+    "damage": 8,
+    "speed": 1.1,
+    "color": "89c277",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "poison"
+  },
+  {
+    "id": "M12",
+    "name": "Mire Keeper",
+    "element": "poison",
+    "weakness": "wind",
+    "shape": "keeper",
+    "hp": 47,
+    "damage": 8,
+    "speed": 1.25,
+    "color": "89c277",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "poison"
+  },
+  {
+    "id": "M13",
+    "name": "Moss Titan",
+    "element": "earth",
+    "weakness": "physical",
+    "shape": "titan",
+    "hp": 49,
+    "damage": 9,
+    "speed": 0.5,
+    "color": "b98b73",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "stagger"
+  },
+  {
+    "id": "M14",
+    "name": "Basalt Knight",
+    "element": "earth",
+    "weakness": "physical",
+    "shape": "knight",
+    "hp": 51,
+    "damage": 9,
+    "speed": 0.65,
+    "color": "b98b73",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "stagger"
+  },
+  {
+    "id": "M15",
+    "name": "Clay Serpent",
+    "element": "earth",
+    "weakness": "physical",
+    "shape": "serpent",
+    "hp": 53,
+    "damage": 9,
+    "speed": 0.8,
+    "color": "b98b73",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "stagger"
+  },
+  {
+    "id": "M16",
+    "name": "Tide Caller",
+    "element": "water",
+    "weakness": "dark",
+    "shape": "mage",
+    "hp": 55,
+    "damage": 10,
+    "speed": 0.95,
+    "color": "72c8ce",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "wet"
+  },
+  {
+    "id": "M17",
+    "name": "Deep Eel",
+    "element": "water",
+    "weakness": "dark",
+    "shape": "eel",
+    "hp": 57,
+    "damage": 10,
+    "speed": 1.1,
+    "color": "72c8ce",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "wet"
+  },
+  {
+    "id": "M18",
+    "name": "Pearl Warden",
+    "element": "water",
+    "weakness": "dark",
+    "shape": "keeper",
+    "hp": 59,
+    "damage": 10,
+    "speed": 1.25,
+    "color": "72c8ce",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "wet"
+  },
+  {
+    "id": "M19",
+    "name": "Gale Harrier",
+    "element": "wind",
+    "weakness": "holy",
+    "shape": "bird",
+    "hp": 61,
+    "damage": 11,
+    "speed": 0.5,
+    "color": "d7dfba",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "exposed"
+  },
+  {
+    "id": "M20",
+    "name": "Sky Imp",
+    "element": "wind",
+    "weakness": "holy",
+    "shape": "imp",
+    "hp": 63,
+    "damage": 11,
+    "speed": 0.65,
+    "color": "d7dfba",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "exposed"
+  },
+  {
+    "id": "M21",
+    "name": "Whirl Bison",
+    "element": "wind",
+    "weakness": "holy",
+    "shape": "bison",
+    "hp": 65,
+    "damage": 11,
+    "speed": 0.8,
+    "color": "d7dfba",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "exposed"
+  },
+  {
+    "id": "M22",
+    "name": "Rust Sellsword",
+    "element": "physical",
+    "weakness": "fire",
+    "shape": "knight",
+    "hp": 67,
+    "damage": 12,
+    "speed": 0.95,
+    "color": "e0b6a1",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "bleed"
+  },
+  {
+    "id": "M23",
+    "name": "Iron Bandit",
+    "element": "physical",
+    "weakness": "fire",
+    "shape": "bandit",
+    "hp": 69,
+    "damage": 12,
+    "speed": 1.1,
+    "color": "e0b6a1",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "bleed"
+  },
+  {
+    "id": "M24",
+    "name": "Bone Scrapper",
+    "element": "physical",
+    "weakness": "fire",
+    "shape": "scrapper",
+    "hp": 71,
+    "damage": 12,
+    "speed": 1.25,
+    "color": "e0b6a1",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "bleed"
+  },
+  {
+    "id": "M25",
+    "name": "Shade Mourner",
+    "element": "dark",
+    "weakness": "ice",
+    "shape": "shade",
+    "hp": 73,
+    "damage": 13,
+    "speed": 0.5,
+    "color": "9784c5",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "hex"
+  },
+  {
+    "id": "M26",
+    "name": "Grave Bat",
+    "element": "dark",
+    "weakness": "ice",
+    "shape": "bat",
+    "hp": 75,
+    "damage": 13,
+    "speed": 0.65,
+    "color": "9784c5",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "hex"
+  },
+  {
+    "id": "M27",
+    "name": "Oblivion Walker",
+    "element": "dark",
+    "weakness": "ice",
+    "shape": "walker",
+    "hp": 77,
+    "damage": 13,
+    "speed": 0.8,
+    "color": "9784c5",
+    "attacks": [
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "hex"
+  },
+  {
+    "id": "M28",
+    "name": "Halo Pilgrim",
+    "element": "holy",
+    "weakness": "lightning",
+    "shape": "pilgrim",
+    "hp": 79,
+    "damage": 14,
+    "speed": 0.95,
+    "color": "f5dc90",
+    "attacks": [
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "blessed"
+  },
+  {
+    "id": "M29",
+    "name": "Ivory Watcher",
+    "element": "holy",
+    "weakness": "lightning",
+    "shape": "sentinel",
+    "hp": 81,
+    "damage": 14,
+    "speed": 1.1,
+    "color": "f5dc90",
+    "attacks": [
+      "Sweep",
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "blessed"
+  },
+  {
+    "id": "M30",
+    "name": "Sun Priest",
+    "element": "holy",
+    "weakness": "lightning",
+    "shape": "priest",
+    "hp": 83,
+    "damage": 14,
+    "speed": 1.25,
+    "color": "f5dc90",
+    "attacks": [
+      "Feint",
+      "Heavy blow",
+      "Echo combo",
+      "Strike",
+      "Strike"
+    ],
+    "status": "blessed"
+  }
+]

@@ -1,0 +1,35 @@
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+.vs/
+*.sln
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.tmp
+__pycache__/
+*.pyc
+
+# Local connector settings, credentials, test artifacts and per-user state
+.vscode/mcp.json
+.vscode/*.local.json
+.env
+.env.*
+*.log
+*.pdb
+*.key
+*.pfx
+*.pem
+*.crt
+.DS_Store
+Thumbs.db
+Releases*/
+TestReports*/
+
+# Unreal: built distributables and derived output are NEVER source assets
+StagedBuilds/
+Cooked/
+AssetRegistryCache/
+.DDC/

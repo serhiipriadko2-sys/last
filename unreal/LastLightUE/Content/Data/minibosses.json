@@ -1,0 +1,164 @@
+[
+  {
+    "id": "B01",
+    "name": "Ash Warden",
+    "kind": "miniboss",
+    "gate_level": 90,
+    "hp": 90,
+    "damage": 11,
+    "element": "fire",
+    "weakness": "poison",
+    "color": "e98c57",
+    "shape": "knight",
+    "attacks": [
+      "Trial of Fire",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 1
+  },
+  {
+    "id": "B02",
+    "name": "Glacial Widow",
+    "kind": "miniboss",
+    "gate_level": 80,
+    "hp": 110,
+    "damage": 13,
+    "element": "ice",
+    "weakness": "earth",
+    "color": "8dcce8",
+    "shape": "spider",
+    "attacks": [
+      "Trial of Ice",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 2
+  },
+  {
+    "id": "B03",
+    "name": "Storm Judge",
+    "kind": "miniboss",
+    "gate_level": 70,
+    "hp": 130,
+    "damage": 15,
+    "element": "lightning",
+    "weakness": "water",
+    "color": "d3b2ff",
+    "shape": "golem",
+    "attacks": [
+      "Trial of Lightning",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 3
+  },
+  {
+    "id": "B04",
+    "name": "Thorn Archbishop",
+    "kind": "miniboss",
+    "gate_level": 60,
+    "hp": 150,
+    "damage": 17,
+    "element": "poison",
+    "weakness": "wind",
+    "color": "89c277",
+    "shape": "priest",
+    "attacks": [
+      "Trial of Poison",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 4
+  },
+  {
+    "id": "B05",
+    "name": "Stone Colossus",
+    "kind": "miniboss",
+    "gate_level": 50,
+    "hp": 170,
+    "damage": 19,
+    "element": "earth",
+    "weakness": "physical",
+    "color": "b98b73",
+    "shape": "titan",
+    "attacks": [
+      "Trial of Earth",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 5
+  },
+  {
+    "id": "B06",
+    "name": "Drowned Oracle",
+    "kind": "miniboss",
+    "gate_level": 40,
+    "hp": 190,
+    "damage": 21,
+    "element": "water",
+    "weakness": "dark",
+    "color": "72c8ce",
+    "shape": "mage",
+    "attacks": [
+      "Trial of Water",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 6
+  },
+  {
+    "id": "B07",
+    "name": "Wind Dancer",
+    "kind": "miniboss",
+    "gate_level": 30,
+    "hp": 210,
+    "damage": 23,
+    "element": "wind",
+    "weakness": "holy",
+    "color": "d7dfba",
+    "shape": "bird",
+    "attacks": [
+      "Trial of Wind",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 7
+  },
+  {
+    "id": "B08",
+    "name": "Iron Revenant",
+    "kind": "miniboss",
+    "gate_level": 20,
+    "hp": 230,
+    "damage": 25,
+    "element": "physical",
+    "weakness": "fire",
+    "color": "e0b6a1",
+    "shape": "knight",
+    "attacks": [
+      "Trial of Physical",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 8
+  },
+  {
+    "id": "B09",
+    "name": "Night Seraph",
+    "kind": "miniboss",
+    "gate_level": 10,
+    "hp": 250,
+    "damage": 27,
+    "element": "dark",
+    "weakness": "ice",
+    "color": "9784c5",
+    "shape": "seraph",
+    "attacks": [
+      "Trial of Dark",
+      "Ruinous Combo",
+      "Break Pattern"
+    ],
+    "phase2": 9
+  }
+]

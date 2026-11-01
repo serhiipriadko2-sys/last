@@ -1,0 +1,208 @@
+{
+  "package": "SoT30 v5.5.7 audit repair + PINO amendment",
+  "package_version": "v5.5.7",
+  "baseline_release": "v5.5.6",
+  "date": "2026-07-31",
+  "adr": "ADR-20260730-01",
+  "behavior_adrs": [
+    "ADR-20260730-02"
+  ],
+  "generated_from": "canonical_git_blobs",
+  "generated_from_ref": "5c07f57e3a7793b1c09caa83bf40a8e7ff893e09",
+  "source_tree_path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
+  "line_ending_policy": "LF",
+  "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
+  "knowledge_file_count": 30,
+  "corpus_bytes": 4054425,
+  "project_instructions_chars": 5996,
+  "project_instructions_bytes": 8200,
+  "acceptance_range": "T01-T97",
+  "supplemental_acceptance_range": "T98-T103",
+  "changed_files": [
+    "00_PROJECT_ROUTER.md",
+    "01_PARITY_ADVANCEMENT_MANIFEST.md",
+    "02_PROJECTS_SURFACE_MAP.md",
+    "12_COUNCIL_VOICES.md",
+    "15_SUPABASE_MEMORY_PLANE.md",
+    "20_GOVERNANCE_ADR.md",
+    "22_CONNECTORS_TOOLS_BOUNDARY.md",
+    "25_LIBER_SPACE_BUSIDO.md",
+    "28_EVALS_ACCEPTANCE.md",
+    "29_INDEX_UPLOAD_MANIFEST.md"
+  ],
+  "unchanged_files": [
+    "03_TELOS_MANTRA_PRINCIPLES.md",
+    "04_IDENTITY_NON_MIRROR.md",
+    "05_TRUTH_SIFT_RAG.md",
+    "06_SECURITY_INTEGRITY.md",
+    "07_UNIVERSAL_ROUTER.md",
+    "08_STATECYCLE_RUNTIME.md",
+    "09_METRICS_ENGINE.md",
+    "10_ENTROPY_FRACTAL_EWS.md",
+    "11_SLO_PLAYBOOK_CONTROL.md",
+    "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+    "14_MEMORY_MODEL.md",
+    "16_SHADOW_LAYER.md",
+    "17_DREAMSPACE_DREAMSEED.md",
+    "18_HORIZON_WEAVER.md",
+    "19_DRY_DARK_RUN_PROTOCOL.md",
+    "21_WORKFLOW_OPS_LEDGER.md",
+    "23_BUILDER_PROJECTS_COMPAT.md",
+    "24_INTERFACE_STYLE.md",
+    "26_SOMATIC_INTUITION.md",
+    "27_WHAT_IF_SCENARIO_MATRIX.md"
+  ],
+  "files": [
+    {
+      "path": "knowledge/00_PROJECT_ROUTER.md",
+      "bytes": 11366,
+      "sha256": "3a5a1e3d0837929aeddef26a4bac575289266f3db99b68e16a718c5bd78a2bb9"
+    },
+    {
+      "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "bytes": 27440,
+      "sha256": "51cc8721dbc58fbc3953a521762d96f62c78d55bdc7f660dcbc1019bceb96925"
+    },
+    {
+      "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "bytes": 7587,
+      "sha256": "875eb325d39aab445b38b92d3c53b27e392657802b051ba1a7ae81b069f7c156"
+    },
+    {
+      "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "bytes": 48573,
+      "sha256": "f8fd02c9d3cc3a9f5eb08bd5e57d0ed65c02b77d726b0df781bd7175b7ada55e"
+    },
+    {
+      "path": "knowledge/04_IDENTITY_NON_MIRROR.md",
+      "bytes": 92708,
+      "sha256": "587991f3f354f8642fbcdbb0fba212306e879abbb5833c8d5909c1e38c6659c1"
+    },
+    {
+      "path": "knowledge/05_TRUTH_SIFT_RAG.md",
+      "bytes": 41451,
+      "sha256": "396fffda61a611729a7fb8d82f434b344fb79cf8cb24596b816f05824d54b3c9"
+    },
+    {
+      "path": "knowledge/06_SECURITY_INTEGRITY.md",
+      "bytes": 150275,
+      "sha256": "1271e23c045e8cf85b4ff1720c651191a19bfa4de4c05f72851e8d42584e15d7"
+    },
+    {
+      "path": "knowledge/07_UNIVERSAL_ROUTER.md",
+      "bytes": 82168,
+      "sha256": "a7f8956457e8c7ada2f0af1e70a2e34cb59e0034e40d3b7f535a2c46c21a1607"
+    },
+    {
+      "path": "knowledge/08_STATECYCLE_RUNTIME.md",
+      "bytes": 12896,
+      "sha256": "4145175144cfda6c0c24c335f50a6fb27bd44f0846b6eea9d056eba31517b96e"
+    },
+    {
+      "path": "knowledge/09_METRICS_ENGINE.md",
+      "bytes": 15215,
+      "sha256": "0a5d3951ba57b0e6760332a641cd9f2abd625d6cb00e1584c58a8af7e8553b5a"
+    },
+    {
+      "path": "knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "bytes": 14874,
+      "sha256": "48df83050f9615207987dcc3e74d35dccf38eeb81a198e7ee5d4fe0378579233"
+    },
+    {
+      "path": "knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "bytes": 16074,
+      "sha256": "60f9f043b7eb71c3f47a38d36604c6b9fd228ea8b76d8ce8a65405106966553c"
+    },
+    {
+      "path": "knowledge/12_COUNCIL_VOICES.md",
+      "bytes": 24090,
+      "sha256": "5abd0d99876b9096bae7f5806f841c8d911e6a8ecd61917734606ca012b21ac2"
+    },
+    {
+      "path": "knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "bytes": 13386,
+      "sha256": "e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739"
+    },
+    {
+      "path": "knowledge/14_MEMORY_MODEL.md",
+      "bytes": 14110,
+      "sha256": "fd7016036ec0987845b96b39071339ffd9f9dfc8d0f83435557061936bbc6763"
+    },
+    {
+      "path": "knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "bytes": 15325,
+      "sha256": "b5a47d2803e672beed5d87760719c02766c91835055832cd6012fd556e59b27e"
+    },
+    {
+      "path": "knowledge/16_SHADOW_LAYER.md",
+      "bytes": 8289,
+      "sha256": "be46e1d9a5898b3d07d3a3813854323a49bd2394a936c7e7928a25eb1daff795"
+    },
+    {
+      "path": "knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "bytes": 11430,
+      "sha256": "dd4d8af3cf88c1088d937ba45f2a6e4f28e8eb14f0373f1a7b6f3c63524f9c9f"
+    },
+    {
+      "path": "knowledge/18_HORIZON_WEAVER.md",
+      "bytes": 13916,
+      "sha256": "282ff5be29df9776cfb881bf8d985744f509413dc7ce19ef827993b9ad4598d3"
+    },
+    {
+      "path": "knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "bytes": 12501,
+      "sha256": "ffb66f7e8293d81f4aa2d526a239efffb0fbb5335ec8e2de8f4ceea8a218c176"
+    },
+    {
+      "path": "knowledge/20_GOVERNANCE_ADR.md",
+      "bytes": 35544,
+      "sha256": "a7fba909f071ee26ea98f353b45d517f07a21a31cca9fa7a9dad490c4b76f6ab"
+    },
+    {
+      "path": "knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "bytes": 19105,
+      "sha256": "20a47211734796f4af94ddd1621d19d39474785fbcf9a1570146d3edf9e833a5"
+    },
+    {
+      "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "bytes": 4045,
+      "sha256": "c1d1de95b836c277f354cbaf16b8c8a142ac53d2d824fc5d537b2be0218feebb"
+    },
+    {
+      "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "bytes": 1091,
+      "sha256": "b5f58d2d1226fff156d5cef4c6e34b9aff0dfe55836a8ca0870fe59201ffd334"
+    },
+    {
+      "path": "knowledge/24_INTERFACE_STYLE.md",
+      "bytes": 2831441,
+      "sha256": "576b0c881d5c0a889898ca7e668c48a46f816203fde720865914785cc69f380b"
+    },
+    {
+      "path": "knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "bytes": 458205,
+      "sha256": "d37f90d554be82e41393a64017ce0a6f9e6bacd334414c863bd5cf6ab6bb3aa5"
+    },
+    {
+      "path": "knowledge/26_SOMATIC_INTUITION.md",
+      "bytes": 24590,
+      "sha256": "1a704c9fc494166ed01c643a770e703afdd44b36296aad9101696cef1fc12bf5"
+    },
+    {
+      "path": "knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "bytes": 22008,
+      "sha256": "a9f187e0727c86d449fe40fa787d329049076c1e05723aa768eb0b05ba1a3d9a"
+    },
+    {
+      "path": "knowledge/28_EVALS_ACCEPTANCE.md",
+      "bytes": 19157,
+      "sha256": "8acaf1a42e91a56532f3c41de7b1498012c3c833205d06091091098b5537dcea"
+    },
+    {
+      "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "bytes": 5565,
+      "sha256": "3fda8fe5b1af2253b0a67567e1425d4b06c2d63055173c4d0526ef183d8723bf"
+    }
+  ],
+  "live_project_verified": false
+}
