@@ -997,7 +997,8 @@ function sloGuard(metrics: IskraMetrics, events: Events): GuardDecision {
   
   return 'PROCEED';
 }
-Фаза 5: PLAYBOOK (Mode Selection)Playbook	Temperature	Голоса	Триггеры
+Фаза 5: PLAYBOOK (Mode Selection)
+Playbook	Temperature	Голоса	Триггеры
 ROUTINE	0.7	ISKRA, PINO	pain<0.3, chaos<0.4
 SIFT	0.3	SAM, ISKRIV	clarity<0.6, фактчекинг
 SHADOW	0.8	ANHANTRA, KAIN	pain≥0.3, silence>0.5
