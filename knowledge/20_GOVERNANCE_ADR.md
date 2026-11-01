@@ -640,3 +640,4 @@ Knowledge `12,20,28,29`; ADR/changelog; release receipts, manifest, ZIP and ledg
 D: ADR → file 12 → T98–T103 → source-freeze → package/ledger → PR CI.
 Ω: 0.95 static; live effectiveness не проверена.
 Λ: clean-Project T98–T103 и первый repair event.
+
