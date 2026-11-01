@@ -1,0 +1,66 @@
+#if WITH_DEV_AUTOMATION_TESTS
+#include "Misc/AutomationTest.h"
+#include "LLStage.h"
+#include "LLHero.h"
+#include "Engine/SkeletalMesh.h"
+#include "Animation/AnimSequence.h"
+#include "Components/SceneComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLLImportedModelsTest,
+ "LastLight.Migration.ImportedCharactersAndAnims",
+ EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FLLImportedModelsTest::RunTest(const FString& Parameters)
+{
+ for(const FString& Model:{TEXT("hero"),TEXT("knight"),TEXT("wolf"),
+  TEXT("wasp"),TEXT("golem"),TEXT("wraith")})
+ {
+  FString Base=FString::Printf(TEXT("/Game/Characters/Joined/%s/%s/SkeletalMeshes/%s"),
+   *Model,*Model,*Model);
+  USkeletalMesh* Mesh=LoadObject<USkeletalMesh>(nullptr,*(Base+TEXT(".")+Model));
+  TestNotNull(*(Model+TEXT(" original joined skeleton mesh")),Mesh);
+  if(!Mesh)continue;
+  const auto Bounds=Mesh->GetBounds();
+  TestTrue(*(Model+TEXT(" has nonzero mesh bounds")),Bounds.BoxExtent.Size()>0.01f);
+  UE_LOG(LogTemp,Display,TEXT("LL_ART_BOUND model=%s extent=%s origin=%s"),
+   *Model,*Bounds.BoxExtent.ToString(),*Bounds.Origin.ToString());
+  for(const FString& Clip:{TEXT("Idle"),TEXT("Walk"),TEXT("Run"),
+   TEXT("Attack"),TEXT("Guard"),TEXT("Dodge"),TEXT("Hit")})
+  {
+   UAnimSequence* Anim=LoadObject<UAnimSequence>(nullptr,
+    *(Base+Clip+TEXT(".")+Model+Clip));
+   TestNotNull(*(Model+TEXT(" animation ")+Clip),Anim);
+   if(Anim)TestTrue(*(Model+TEXT(" valid clip duration ")+Clip),Anim->GetPlayLength()>0.01f);
+  }
+ }
+ return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLLActorFacingTest,
+ "LastLight.Migration.FacingAndCollision",
+ EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FLLActorFacingTest::RunTest(const FString& Parameters)
+{
+ const ALLStage* Stage=GetDefault<ALLStage>();
+ TestNotNull(TEXT("Stage CDO available"),Stage);
+ if(Stage&&Stage->GetRootComponent())
+  TestEqual(TEXT("root of STATIC procedural meshes must be STATIC"),
+   Stage->GetRootComponent()->GetMobility(),EComponentMobility::Static);
+ const ALLHero* Hero=GetDefault<ALLHero>();
+ TestNotNull(TEXT("Hero CDO available"),Hero);
+ if(Hero&&Hero->GetMesh())
+ {
+  TestNotNull(TEXT("original hero rig on actual Unreal character"),
+   Hero->GetMesh()->GetSkeletalMeshAsset());
+ }
+ // Unreal X-forward, Y-right. +Y player and -Y enemy face one another.
+ const FVector HeroP(0,-510,145), EnemyP(0,520,135);
+ const FVector TowardEnemy=(EnemyP-HeroP).GetSafeNormal2D();
+ const FVector TowardHero=(HeroP-EnemyP).GetSafeNormal2D();
+ const FVector HeroForward=FRotator(0,90,0).Vector();
+ const FVector EnemyForward=FRotator(0,-90,0).Vector();
+ TestTrue(TEXT("hero +Y points at opponent"),FVector::DotProduct(HeroForward,TowardEnemy)>.99f);
+ TestTrue(TEXT("opponent -Y points at hero"),FVector::DotProduct(EnemyForward,TowardHero)>.99f);
+ return true;
+}
+#endif

@@ -1,0 +1,176 @@
+{
+  "format": "lastlight.unreal.migration.check.v1",
+  "project": "E:\\LastLightUnreal\\LastLightUE",
+  "checks": [
+    {
+      "name": "data-skills.json",
+      "status": "PASS",
+      "details": "sha256=893e6753250b4079723a4ee9b84a8562386e75aa539544d577e693dd4c7f5b3d"
+    },
+    {
+      "name": "data-mobs.json",
+      "status": "PASS",
+      "details": "sha256=4c267edc7ea58183f7a3b5383b62c8d548027a8974a39a68b4f15ef252be5ea5"
+    },
+    {
+      "name": "data-minibosses.json",
+      "status": "PASS",
+      "details": "sha256=5e1cf40cc624b90df15a6dbc18d77848330a203c2e41c6ecc78fbfd358ce96c1"
+    },
+    {
+      "name": "data-balance.json",
+      "status": "PASS",
+      "details": "sha256=01571bd7ab29e8c8b80a3c02b9da7de9a7394b24a502e6b063bad058a82fb2e8"
+    },
+    {
+      "name": "data-starter_gear.json",
+      "status": "PASS",
+      "details": "sha256=dd14f5f9b44836001e556879ed4a8895b9625e52841265ba6170fea93376d8f2"
+    },
+    {
+      "name": "records-skills",
+      "status": "PASS",
+      "details": "100 / 100"
+    },
+    {
+      "name": "records-mobs",
+      "status": "PASS",
+      "details": "30 / 30"
+    },
+    {
+      "name": "records-minibosses",
+      "status": "PASS",
+      "details": "9 / 9"
+    },
+    {
+      "name": "unique-skill-ids",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "russian-skill-labels",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "rig-source-hero",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "rig-source-knight",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "rig-source-wolf",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "rig-source-wasp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "rig-source-golem",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "rig-source-wraith",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLGameInstance.h",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLGameInstance.cpp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLGameMode.h",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLGameMode.cpp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLHero.h",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLHero.cpp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLHUD.h",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLHUD.cpp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLStage.h",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LLStage.cpp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LastLightUE.cpp",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "source-LastLightUE.Build.cs",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "map-Explore",
+      "status": "PASS",
+      "details": "bytes=6343"
+    },
+    {
+      "name": "map-Arena",
+      "status": "PASS",
+      "details": "bytes=6333"
+    },
+    {
+      "name": "editor-dll",
+      "status": "PASS",
+      "details": "bytes=532480"
+    },
+    {
+      "name": "source-godot-untouched",
+      "status": "PASS",
+      "details": ""
+    }
+  ],
+  "pass": 32,
+  "fail": 0,
+  "status": "PASS",
+  "nonclaims": [
+    "No commercial readiness",
+    "Python is editor-only",
+    "DLL alone is not a packaged Windows game",
+    "Imported rig quality requires visual QA",
+    "Godot save files are not imported into Unreal"
+  ]
+}

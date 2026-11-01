@@ -1,0 +1,95 @@
+#if WITH_DEV_AUTOMATION_TESTS
+#include "Misc/AutomationTest.h"
+#include "LLGameInstance.h"
+#include "Misc/Paths.h"
+
+// Actual Unreal C++ gameplay math tests, not a Python reimplementation.
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLLDataSmoke,
+ "LastLight.Migration.DataIntegrity",
+ EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FLLDataSmoke::RunTest(const FString& Parameters)
+{
+ ULLGameInstance* G=NewObject<ULLGameInstance>();
+ TestTrue(TEXT("five original JSON datasets are readable"),G->LoadDatabase());
+ TestEqual(TEXT("original skill count"),G->AllSkills.Num(),100);
+ TestEqual(TEXT("original enemy species"),G->Mobs.Num(),30);
+ TestEqual(TEXT("miniboss count"),G->Bosses.Num(),9);
+ TestEqual(TEXT("starter item count"),G->Items.Num(),3);
+ TestTrue(TEXT("first skill has its original S001 identifier"),
+  G->AllSkills.Num()>0&&G->AllSkills[0].Id==TEXT("S001"));
+ int32 RussianCount=0;
+ for(const auto& Skill:G->AllSkills)
+  if(!Skill.Display.IsEmpty()&&Skill.Display!=Skill.Name)++RussianCount;
+ TestEqual(TEXT("Russian skill labels"),RussianCount,100);
+ G->RandomizeStartingBuild();
+ TestEqual(TEXT("50 chosen on initial screen"),G->ChosenStart.Num(),50);
+ TestTrue(TEXT("inverted XP curve falls on descent"),
+  G->XPToLose(99)<G->XPToLose(100)&&G->XPToLose(1)<G->XPToLose(10));
+ return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLLCombatSmoke,
+ "LastLight.Migration.CombatLoop",
+ EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FLLCombatSmoke::RunTest(const FString& Parameters)
+{
+ ULLGameInstance* G=NewObject<ULLGameInstance>();
+ if(!G->LoadDatabase()){AddError(TEXT("No skill source data"));return false;}
+ for(int32 I=0;I<50;++I)
+ {
+  G->Innate.Add(G->AllSkills[I]);
+  G->Snapshot.Add(G->AllSkills[I]);
+ }
+ G->Level=100;G->HeroHP=120;G->ActiveEnemy=G->Mobs[0];
+ G->StartBattle();
+ TestEqual(TEXT("battle starts with 2 AP"),G->AP,2);
+ TestEqual(TEXT("battle starts at initial player turn"),int32(G->Phase),int32(ELLPhase::BattlePlayer));
+ TestTrue(TEXT("stage enemy health positive"),G->EnemyHP>=25);
+ const int32 Before=G->EnemyHP;
+ G->BasicStrike();
+ TestEqual(TEXT("offensive QTE state"),int32(G->Phase),int32(ELLPhase::AttackTiming));
+ TestEqual(TEXT("AP reserved until strike resolves"),G->AP,2);
+ G->Timing=1.05f*.67f;
+ G->CompleteAttack(true);
+ TestTrue(TEXT("perfect strike earns additional damage"),G->EnemyHP<Before-8);
+ TestEqual(TEXT("attack spends one AP"),G->AP,1);
+ G->BasicGuard();
+ TestEqual(TEXT("guard starts enemy QTE"),int32(G->Phase),int32(ELLPhase::EnemyTiming));
+ const int32 HP=G->HeroHP;
+ G->Timing=G->AttackDuration*G->AttackFraction;
+ G->Defend(true);
+ TestEqual(TEXT("perfect parry prevents damage"),G->HeroHP,HP);
+ TestTrue(TEXT("counter returns to player or ends encounter"),
+  G->Phase==ELLPhase::BattlePlayer||G->Phase==ELLPhase::EnemyTiming||
+  G->Phase==ELLPhase::Exploration);
+ TestTrue(TEXT("equipment grants skills in combat"),G->GetSkills().Num()>=52);
+ return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLLProgressSmoke,
+ "LastLight.Migration.InverseProgression",
+ EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FLLProgressSmoke::RunTest(const FString& Parameters)
+{
+ ULLGameInstance* G=NewObject<ULLGameInstance>();
+ if(!G->LoadDatabase())return false;
+ for(int32 I=0;I<50;++I)G->Innate.Add(G->AllSkills[I]);
+ G->Snapshot=G->Innate;G->Level=100;G->HeroHP=120;
+ G->Phase=ELLPhase::LossChoice;G->PendingLoss=5;
+ for(int32 I=0;I<5;++I)G->LevelLoss(0);
+ TestEqual(TEXT("five degraded levels"),G->Level,95);
+ TestEqual(TEXT("50 - 5 net skill shrink"),G->Innate.Num(),45);
+ TestEqual(TEXT("evolution slot on level 95"),G->EvolutionSlots,1);
+ TestEqual(TEXT("frozen starting mirror snapshot remains 50"),G->Snapshot.Num(),50);
+ TestTrue(TEXT("evolution consumes slot"),G->Evolve(0,1));
+ TestEqual(TEXT("fusion reduces skill count"),G->Innate.Num(),44);
+ TestEqual(TEXT("fusion slot consumed"),G->EvolutionSlots,0);
+ G->Level=0;
+ G->ActiveEnemy.Id=TEXT("MIRROR");G->ActiveEnemy.HP=160;
+ G->ActiveEnemy.Damage=16;G->ActiveEnemy.bBoss=true;
+ G->bFinal=true;G->StartBattle();
+ TestTrue(TEXT("final boss HP computed from initial build"),G->EnemyHP>=120);
+ TestTrue(TEXT("all skills save unique identifiers"),!G->Innate[0].Id.IsEmpty());
+ return true;
+}
+#endif

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Fallen Star Blade",
+    "slot": "weapon",
+    "grade": 1,
+    "rarity": "rare",
+    "skills": [
+      "S001",
+      "S031"
+    ]
+  },
+  {
+    "name": "Pilgrim Mantle",
+    "slot": "armor",
+    "grade": 1,
+    "rarity": "rare",
+    "skills": [
+      "S004",
+      "S011"
+    ]
+  },
+  {
+    "name": "Ashen Promise",
+    "slot": "charm",
+    "grade": 1,
+    "rarity": "epic",
+    "skills": [
+      "S025",
+      "S030"
+    ]
+  }
+]

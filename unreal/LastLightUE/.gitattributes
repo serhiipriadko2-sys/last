@@ -1,0 +1,20 @@
+# Unreal binary assets: stored as binary Git objects (no implicit Git LFS dependency).
+*.uasset binary
+*.umap binary
+*.fbx binary
+*.glb binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.wav binary
+*.ogg binary
+*.mp3 binary
+*.psd binary
+*.blend binary
+*.json text eol=lf
+*.md text eol=lf
+*.h text eol=lf
+*.cpp text eol=lf
+*.cs text eol=lf
+*.py text eol=lf
+*.ps1 text eol=lf
