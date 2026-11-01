@@ -997,7 +997,8 @@ When preparing for production, ensure all items in `production_transition.md` ar
   ledger/      ← Факт изменений (SHA-256 hashes)
   governance/  ← Как принимать решения
   system/      ← Как исполнять
-  metrics/     ← Как мерить  mind/        ← Сигнал (не истина)
+  metrics/     ← Как мерить
+  mind/        ← Сигнал (не истина)
   appendix/    ← Идеи (возможны противоречия)
   ```
 
@@ -1996,7 +1997,8 @@ IntegrityEvent:
 ---
 
 ## vΩ.3.5 (ResponseMode Integration) — 2026-01-11
-### Что сделано- geminiService: интеграция ResponseMode в `getChatResponseStream`
+### Что сделано
+- geminiService: интеграция ResponseMode в `getChatResponseStream`
 - Добавлены инструкции для трёх режимов (simple/deep/debate)
 - В режиме 'simple' отключается блок ∆DΩΛ для кратких ответов
 - Экспортирована функция `getResponseModeInstruction()` для внешнего использования
@@ -2995,7 +2997,8 @@ async function handleInput(text: string): Promise<string> {
 
 ### Phase Network Topology
 - Граф фаз: `nodes[]` (фазы системы) + `edges[]` (связи между фазами)
-- Динамическое добавление рёбер с лимитом `max_edges_per_activation` (из контракта)- Запрет self-loops и дублей
+- Динамическое добавление рёбер с лимитом `max_edges_per_activation` (из контракта)
+- Запрет self-loops и дублей
 
 ### Entropy Guard
 - Shannon entropy в nats по скользящему окну символов
